@@ -1,0 +1,164 @@
+
+    /**
+     * Creates an instance of <code>Item.class</code>,
+     * with some object-fields not assigned yet.
+     *
+     * @param itemNumber     a unique identifier for the item. Cannot be null.
+     * @param itemBrand      the brand which the item belongs to. Cannot be null.
+     * @param itemPrice      sales price for the item. Cannot be negative.
+     * @param itemAmount     number of the item in storage. Cannot be negative.
+     * @param itemCategory   a category. Int must be in range 1 to 4.
+     */
+    public Item(
+        final String itemNumber, final String itemBrand,
+        final int itemPrice, final int itemAmount, final int itemCategory
+    ) 
+    {
+        setItemNumber(itemNumber);
+        setItemBrand(itemBrand);
+        setItemPrice(itemPrice);
+        setItemAmount(itemAmount);
+        setItemCategory(itemCategory);
+    }
+
+
+
+public class Warehouse {
+    
+
+    private LinkedHashMap<String, Item> itemsByNumber;
+    private LinkedHashMap<String, Item> itemsByDescription;
+
+    public Warehouse() {
+        this.itemsByNumber = new LinkedHashMap<>();
+        this.itemsByDescription = new LinkedHashMap<>();
+    }    
+
+    public LinkedHashMap<String, Item> getItems() {
+        return this.itemsByNumber;
+    }
+
+    public Item searchByNumberOrDescription(String searchWord) { 
+        Item foundItem = null;
+
+        if (this.itemsByNumber.containsKey(searchWord)) {
+            foundItem = this.itemsByNumber.get(searchWord);
+        } else if (this.itemsByDescription.containsKey(searchWord)) {
+            foundItem = this.itemsByDescription.get(searchWord);
+        } 
+        return foundItem;
+    }
+
+
+    public Item searchByNumberAndDescription(String number, String description) {
+        Item item1 = this.itemsByNumber.get(number);
+        Item item2 = this.itemsByDescription.get(description);
+
+        return ( item1.equals(item2) ? item1 : null);
+    }
+
+    public void addItem( 
+        final String itemNumber, final String itemBrand,
+        final String itemColor,  final String itemDescription,
+        final double itemWeight, final double itemLength,
+        final double itemHeight, final int itemPrice,
+        final int    itemAmount, final int itemCategory
+    ) {
+        Item item = new Item(
+            itemNumber, itemBrand,
+            itemColor, itemDescription,
+            itemWeight, itemLength,
+            itemHeight, itemPrice,
+            itemAmount, itemCategory
+        );
+
+        itemsByNumber.put(itemNumber, item);
+        itemsByDescription.put(itemDescription, item);
+    }
+}
+
+
+
+
+
+
+
+
+        System.out.print("\nItem number: ");
+        String number = scanner.next().trim();
+        System.out.print("\nItem brand: ");
+        String brand = scanner.next().trim();
+        System.out.print("\nItem color: ");
+        String color = scanner.nextLine().trim();
+        System.out.print("\nShort description: ");
+        String description = scanner.next().trim();
+        System.out.print("\nWeight in kilograms (double): ");
+        double weight = scanner.nextDouble();
+        System.out.print("\nLength in meters (double): ");
+        double length = scanner.nextDouble();
+        System.out.print("\nHeight in meters (double): ");
+        double height = scanner.nextDouble();
+        System.out.print("\nPrice in NOK (int): ");
+        int price = scanner.nextInt();
+        System.out.print("\nAmount of items: ");
+        int amount = scanner.nextInt();
+        System.out.print("\nItem category: ");
+        int category = scanner.nextInt();
+
+
+
+
+
+        private static void addItem() {
+
+        boolean valid = false;
+        String number = "";
+        String brand = "";
+        String color = "";
+        String description = "";
+        double weight = 0.0;
+        double length = 0.0;
+        double height = 0.0;
+        int price = 0;
+        int amount = 0;
+        int category = 0;
+        
+        while (!valid) {
+
+            System.out.println("\nPlease enter all item properties on a single line separated by semicolons:");
+            System.out.println("Such as:  ItemNumber;ItemBrand;color;Description;weight;length;height;price;amount;category");
+            System.out.println("\nNew item:\n");
+
+            String line = scanner.next().trim();
+            String[] params = line.split(";");
+
+
+            try {
+                number = params[0].trim();
+                brand = params[1].trim();
+                color = params[2].trim();
+                description = params[3].trim();
+                weight = Double.parseDouble(params[4]);
+                length = Double.parseDouble(params[5]);
+                height = Double.parseDouble(params[6]);
+
+                price = Integer.parseInt(params[7]);
+                amount = Integer.parseInt(params[8]);
+                category = Integer.parseInt(params[9]);
+
+                valid = true;
+            } catch (Exception e) {
+                System.out.print("There was something wrong with the input ");
+                System.out.println("please try again.");
+            }
+        }
+
+        warehouse.addItem(
+            number, brand, color, 
+            description, weight, 
+            length, height, price, 
+            amount, category
+        );
+
+        System.out.println("\n\nNew item was created");
+    }

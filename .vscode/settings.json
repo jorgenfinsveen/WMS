@@ -1,0 +1,6 @@
+{
+    "java.checkstyle.configuration": "/Users/jorgenfinsveen/checkstyle/idatx1001.xml",
+    "java.checkstyle.version": "10.3.4",
+    "java.configuration.updateBuildConfiguration": "interactive",
+    
+}
