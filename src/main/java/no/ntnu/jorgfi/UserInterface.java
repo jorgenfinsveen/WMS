@@ -30,10 +30,13 @@ public class UserInterface {
     /** The Item-register which the user is managing. */
     private static final Warehouse warehouse = new Warehouse();
     /** Scanner object used to read user-inputs from STDIN. */
-    private static final Scanner scanner = new Scanner(System.in);
+    private static Scanner scanner = new Scanner(System.in);
 
     /** Universal option for exiting the application. */
     private static final String OPTION_EXIT = "0";
+
+    /** Container for the item which is currently being created or searched for. */
+    private static Item currentItem = null;
 
 
     /*
@@ -81,12 +84,28 @@ public class UserInterface {
     private static final String HOME_OPTION_SHOW_ALL = "4";
 
 
+    private static int nextMenu = 0;
+
 
     /**
      * Launch the User Interface and activate the displaying of
      * the Home Menu.
      */
     public static void launch() {
+
+        while (true) {
+            if (nextMenu == 0) {
+                initMenu();
+            } else if (nextMenu == 1) {
+                itemMenu();
+            } else {
+                homeMenu();
+            }
+       }
+    }
+
+
+    private static void initMenu() {
 
         /* Prints the welcoming message to STDOUT. */
         printWelcome();
@@ -125,8 +144,7 @@ public class UserInterface {
                 addItem();
                 break;
             case INIT_OPTION_FILL_INVENTORY:    // User will populate the warehouse with defaults.
-                warehouse.fillInventory();
-                itemMenu();
+                fillInventory();
                 break;
         }
     }
@@ -137,6 +155,12 @@ public class UserInterface {
      * the user to give an instruction.
      */
     private static void itemMenu() {
+
+        if (currentItem == null) {
+            nextMenu = 2;
+            return;
+        }
+
         /* Displays the current item and the options available. */
         printCurrentItem();
         printItemMenuOptions();
@@ -197,7 +221,7 @@ public class UserInterface {
                 removeItem();
                 break;
             case ITEM_OPTION_RETURN:    // User would like to return to the Home Menu.
-                homeMenu();
+                nextMenu = 2;
                 break;
         }
     }
@@ -268,7 +292,7 @@ public class UserInterface {
     private static void removeItem() {
 
         /* Asks user to confirm that the item are to be removed. */
-        System.out.print("Are you sure you want to remove the item? (y/n):");
+        System.out.print("Are you sure you want to remove the item? (y/n): ");
         boolean valid = false;
         boolean delete = false;
         String input = "";
@@ -293,10 +317,12 @@ public class UserInterface {
 
         if (delete) {   /* Deletion is chosen, item is deleted and user is redirected to home menu. */
             System.out.println("Item has been removed.");
-            homeMenu();
+            warehouse.deleteCurrentItem(currentItem);
+            currentItem = null;
+            nextMenu = 2;
         } else {        /* Delettion is aborted, and user is redirected to item menu. */
             System.out.println("Item will not be removed.");
-            itemMenu();
+            nextMenu = 1;
         }
     }
 
@@ -327,14 +353,13 @@ public class UserInterface {
                 System.out.println("Please enter a valid number");
             }
         }
-        int currentPrice = warehouse.getCurrentItem().getItemPrice();
+        int currentprice = currentItem.getItemPrice();
 
+        int remainder = 100 - number;
+        int discount = (currentprice * remainder)/100;
         /* Sets the price to be the current price - the given percentage.*/
-        warehouse.alterCurrentItemPrice((currentPrice * (1 - number/100)));
-        System.out.println("\nPrice set to " + number + ".");
-
-        /* Redirects to item menu. */
-        itemMenu();
+        warehouse.alterCurrentItemPrice(currentItem, discount);
+        System.out.println("\nDesired discount of " + number + "% sets price to: " + discount);
     }
 
     /**
@@ -364,11 +389,8 @@ public class UserInterface {
             }
         }
         /* Changes the item price. */
-        warehouse.alterCurrentItemPrice(number);
+        warehouse.alterCurrentItemPrice(currentItem, number);
         System.out.println("\nPrice set to " + number + ".");
-
-        /* Returns to item menu. */
-        itemMenu();
     }
 
 
@@ -399,12 +421,9 @@ public class UserInterface {
             }
         }
         /* Increases the item amount. */
-        int newAmount = warehouse.getCurrentItem().getItemAmount() + number;
-        warehouse.alterCurrentItemAmount(newAmount);
+        int newAmount = currentItem.getItemAmount() + number;
+        warehouse.alterCurrentItemAmount(currentItem, newAmount);
         System.out.println("\nItem amount increased by " + number + ".");
-
-        /* Returns to the item menu. */
-        itemMenu();
     }
 
 
@@ -418,7 +437,7 @@ public class UserInterface {
         boolean valid = false;
         String input = "";
         int number = 0;
-        int currentAmount = warehouse.getCurrentItem().getItemAmount();
+        int currentAmount = currentItem.getItemAmount();
 
         /* Awaits a valid user input. */
         while (!valid) {
@@ -440,11 +459,8 @@ public class UserInterface {
 
         /* Decreases the amount of the item. */
         int newAmount = currentAmount - number;
-        warehouse.alterCurrentItemAmount(newAmount);
+        warehouse.alterCurrentItemAmount(currentItem, newAmount);
         System.out.println("\nItem amount decreased by " + number + ".");
-
-        /* Returns to item menu. */
-        itemMenu();
     }
 
 
@@ -564,6 +580,8 @@ public class UserInterface {
         } else { /* Item was already present. */
             System.out.println("\n\nItem already exists.");
         }
+        currentItem = warehouse.search(number);
+        nextMenu = 1;
     }
 
 
@@ -603,11 +621,17 @@ public class UserInterface {
      * amount and price of the item.
      */
     private static void printCurrentItem() {
-        System.out.println("\nCurrent item:\n");
+        System.out.println("\n------------------------------------------");
+        System.out.println("             CURRENT ITEM:");
+        System.out.println("------------------------------------------");
 
-        System.out.println("Item number:" + warehouse.getCurrentItem().getItemNumber());
-        System.out.println("Amount:"      + warehouse.getCurrentItem().getItemAmount());
-        System.out.println("Price:"       + warehouse.getCurrentItem().getItemPrice() );
+        System.out.println("- Item number: " + currentItem.getItemNumber());
+        System.out.println("- Description: " + currentItem.getItemDescription());
+        System.out.println("- Amount: "      + currentItem.getItemAmount());
+        System.out.println("- Price: "       + currentItem.getItemPrice() );
+        System.out.println("- Category: "    + currentItem.getItemCategoryAsString());
+
+        System.out.println("------------------------------------------");
     }
 
 
@@ -647,27 +671,33 @@ public class UserInterface {
      * instance to search for a specific item by either number or description.
      */
     private static void searchByNameOrDescription() {
-        System.out.print("\nPlease enter a search string:");
+        System.out.print("\nPlease enter a search string: ");
 
         /*
          * Parses a user input from STDIN and removes 
          * eventual spaces in front and after the input.
          */
-        String search = scanner.next().trim();
-        warehouse.search(search);
+        
+        String search = "";
+        scanner = scanner.reset();
+        scanner.nextLine();
+        search += scanner.nextLine().trim();
+        
+        
+        currentItem = warehouse.search(search);
 
         /*
          * Checks if the search resulted in a found item
          * or if there were no matches.
          */
-        if (warehouse.getCurrentItem() == null) {
+        if (currentItem == null) {
             System.out.println("Did not find this item.");
             /* If not found, return to the home menu. */
-            homeMenu();
+            nextMenu = 2;
         } else {
             System.out.println("Item found.");
             /* If found, display the Item in the item menu. */
-            itemMenu();
+            nextMenu = 1;
         }
     }
 
@@ -683,24 +713,56 @@ public class UserInterface {
          * removes eventual spaces in front and after each
          * of the inputs.
          */
-        System.out.print("\nPlease enter a search string nr 1:");
-        String search1 = scanner.next().trim();
-        System.out.print("\nPlease enter a search string nr 2:");
-        String search2 = scanner.next().trim();
-        warehouse.search(search1, search2);
+        scanner = scanner.reset();
+        scanner.nextLine();
+        System.out.print("\nPlease enter a search string nr 1: ");
+        String search1 = scanner.nextLine().trim();
+        System.out.print("\nPlease enter a search string nr 2: ");
+        //scanner.nextLine();
+        String search2 = scanner.nextLine().trim();
+        currentItem = warehouse.search(search1, search2);
 
         /*
          * Checks if the search resulted in a found item
          * or if there were no matches.
          */
-        if (warehouse.getCurrentItem() == null) {
+        if (currentItem == null) {
             System.out.println("Did not find this item.");
             /* If not found, return to the home menu. */
-            homeMenu();
+            nextMenu = 2;
         } else {
             System.out.println("Item found.");
             /* If found, display the Item in the item menu. */
-            itemMenu();
+            nextMenu = 1;
         }
+    }
+
+    private static void fillInventory() {
+        Item item1 = new Item(
+            "Floor 2.0", "Jysk", "brown",
+            "Futuristic floor", 3,
+            188.0, 2.0, 100,
+            25, 1
+        );
+        Item item2 = new Item(
+            "DumbleDoor", "Skeidar", "grey",
+            "Magical door", 95,
+            150.0, 200.0, 15000,
+            3, 3
+        );
+        Item item3 = new Item(
+            "Seamless", "Home Decor", "transparent",
+            "Simplistic window", 20,
+            100.0, 100.0, 2350,
+            12, 2
+        );
+        Item item4 = new Item(
+            "To-tom-fir-tom", "Monter", "white",
+            "Classic Norwegian go-to lumber", 12,
+            200.0, 5.08, 80,
+            100, 4
+        );
+        currentItem = warehouse.fillInventory(item1, item2, item3, item4);
+        nextMenu = 1;
     }
 }

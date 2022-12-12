@@ -25,8 +25,6 @@ public class Warehouse {
     
     /** Contains Item-instances identifyed by both ItemNumber and ItemDescription. */
     private LinkedHashMap<String, Item> items;
-    /** Container for the item which is currently being created or searched for. */
-    private Item currentItem;
 
 
     /**
@@ -36,7 +34,6 @@ public class Warehouse {
      */
     public Warehouse() {
         this.items = new LinkedHashMap<>();
-        this.currentItem = null;
     }    
 
     /**
@@ -58,18 +55,6 @@ public class Warehouse {
         set.addAll(items.values());
         return set;
     }
-
-
-    /**
-     * Access the Item which is currently stored in
-     * the <code>currentItem</code> variable.
-     * 
-     * @return current Item instance.
-     */
-    public Item getCurrentItem() {
-        return this.currentItem;
-    }
-
 
 
     /**
@@ -118,8 +103,8 @@ public class Warehouse {
      *      for, representing either an ItemNumber or an
      *      ItemDescription.
      */
-    public void search(String searchWord) { 
-        currentItem = items.get(searchWord);
+    public Item search(String searchWord) { 
+        return items.get(searchWord);
     }
 
 
@@ -151,11 +136,17 @@ public class Warehouse {
      *      an ItemNumber, this is expected to represent the
      *      ItemDescription, and vice versa.
      */
-    public void search(String searchWord1, String searchWord2) {
+    public Item search(String searchWord1, String searchWord2) {
         Item item1 = items.get(searchWord1);
         Item item2 = items.get(searchWord2);
+        Item found;
 
-        currentItem = (item1.equals(item2) ? item1 : null);
+        if (item1 == null || item2 == null) {
+            found = null;
+        } else {
+            found = (item1.equals(item2) ? item1 : null);
+        }
+        return found;
     }
 
     /**
@@ -168,10 +159,10 @@ public class Warehouse {
      * will not try to remove an Item from the LinkedHashMap
      * if the currentItem is null. 
      */
-    public void deleteCurrentItem() {
-        if (currentItem != null) {
-            items.remove(currentItem.getItemNumber());
-            items.remove(currentItem.getItemDescription());
+    public void deleteCurrentItem(Item item) {
+        if (item != null) {
+            items.remove(item.getItemNumber());
+            items.remove(item.getItemDescription());
         }
     }
 
@@ -187,9 +178,9 @@ public class Warehouse {
      * @param amount the new amount of products related
      *      to the current Item instance.
      */
-    public void alterCurrentItemAmount(int amount) {
-        if (currentItem != null) {
-            currentItem.setItemAmount(amount);
+    public void alterCurrentItemAmount(Item item, int amount) {
+        if (item != null) {
+            item.setItemAmount(amount);
         }
     }
 
@@ -203,9 +194,9 @@ public class Warehouse {
      * @param price the new price for a product associated
      *      with this Item instance.
      */
-    public void alterCurrentItemPrice(int price) {
-        if (currentItem != null) {
-            currentItem.setItemPrice(price);
+    public void alterCurrentItemPrice(Item item, int price) {
+        if (item != null) {
+            item.setItemPrice(price);
         }
     }
 
@@ -223,12 +214,12 @@ public class Warehouse {
      * 
      * @param description the new description of the current Item.
      */
-    public void alterCurrentItemDescription(String description) {
-        if (currentItem != null) {
-            String previousDescription = currentItem.getItemDescription();
-            currentItem.setItemDescription(description);
+    public void alterCurrentItemDescription(Item item, String description) {
+        if (item != null) {
+            String previousDescription = item.getItemDescription();
+            item.setItemDescription(description);
             this.items.remove(previousDescription);
-            this.items.put(description, currentItem);
+            this.items.put(description, item);
         }
     }
 
@@ -244,9 +235,9 @@ public class Warehouse {
      *      will symbolize the reduction of the Item's current
      *      price.
      */
-    public void setDiscount(int discount) {
-        if (currentItem != null) {
-            currentItem.setItemPrice(currentItem.getItemPrice() * (1 - (discount/100)));
+    public void setDiscount(Item item, int discount) {
+        if (item != null) {
+            item.setItemPrice(item.getItemPrice() * (1 - (discount/100)));
         }
     }
 
@@ -260,37 +251,13 @@ public class Warehouse {
      * 
      * <p>The last of the Items created will be set as the current Item.
      */
-    public void fillInventory() {
-        Item item1 = new Item(
-            "Floor 2.0", "Jysk", "brown",
-            "Futuristic floor", 3,
-            188.0, 2.0, 100,
-            25, 1
-        );
-        Item item2 = new Item(
-            "DumbleDoor", "Skeidar", "grey",
-            "Magical door", 95,
-            150.0, 200.0, 15000,
-            3, 3
-        );
-        Item item3 = new Item(
-            "Seamless", "Home Decor", "transparent",
-            "Simplistic window", 20,
-            100.0, 100.0, 2350,
-            12, 2
-        );
-        Item item4 = new Item(
-            "To-tom-fir-tom", "Monter", "white",
-            "Classic Norwegian go-to lumber", 12,
-            200.0, 5.08, 80,
-            100, 4
-        );
+    public Item fillInventory(Item item1, Item item2, Item item3, Item item4) {
 
         addItem(item1);
         addItem(item2);
         addItem(item3);
         addItem(item4);
-        
-        currentItem = items.get("To-tom-fir-tom");
+
+        return items.get("To-tom-fir-tom");
     }
 }
