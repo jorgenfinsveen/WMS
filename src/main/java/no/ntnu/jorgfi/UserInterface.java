@@ -87,6 +87,18 @@ public class UserInterface {
     private static int nextMenu = 0;
 
 
+    private static final String[] fieldNames = new String[] {
+        "- Item number:   |  ",
+        "- Brand:         |  ",
+        "- Color:         |  ",
+        "- Description:   |  ",
+        "- Height:        |  ",
+        "- Length:        |  ",
+        "- Amount:        |  ",
+        "- Price:         |  ",
+        "- Category:      |  "
+    };
+
     /**
      * Launch the User Interface and activate the displaying of
      * the Home Menu.
@@ -291,8 +303,6 @@ public class UserInterface {
      */
     private static void removeItem() {
 
-        /* Asks user to confirm that the item are to be removed. */
-        System.out.print("Are you sure you want to remove the item? (y/n): ");
         boolean valid = false;
         boolean delete = false;
         String input = "";
@@ -302,6 +312,9 @@ public class UserInterface {
          * of removing the current item from the warehouse.
          */
         while (!valid) {
+
+            /* Asks user to confirm that the item are to be removed. */
+            System.out.print("Are you sure you want to remove the item? (y/n): ");
             input = scanner.next().trim();
 
             if ("y".equalsIgnoreCase(input)) {          /* User confirms to removal by writing "y". */
@@ -332,14 +345,15 @@ public class UserInterface {
      */
     private static void addDiscount() {
 
-        /* Asks for user input as a positive integer between 0 and 100. */
-        System.out.print("\nDiscount for item. Must be between 0 and 100: ");
         boolean valid = false;
         String input = "";
         int number = 0;
 
         /* Awaits valid user input. */
         while (!valid) {
+
+            /* Asks for user input as a positive integer between 0 and 100. */
+            System.out.print("\nDiscount for item. Must be between 0 and 100: ");
             input = scanner.next().trim();
             try {
                 /* Will try to convert the input into an integer. */
@@ -359,7 +373,7 @@ public class UserInterface {
         int discount = (currentprice * remainder)/100;
         /* Sets the price to be the current price - the given percentage.*/
         warehouse.alterCurrentItemPrice(currentItem, discount);
-        System.out.println("\nDesired discount of " + number + "% sets price to: " + discount);
+        System.out.println("\nDesired discount of " + number + "% sets price to " + discount + ".");
     }
 
     /**
@@ -367,14 +381,14 @@ public class UserInterface {
      */
     private static void changePrice() {
 
-        /* Asks for a new price from the user. */
-        System.out.print("\nNew price: ");
         boolean valid = false;
         String input = "";
         int number = 0;
 
         /* Awaits a valid input which is a non-negative integer. */
         while (!valid) {
+            /* Asks for a new price from the user. */
+            System.out.print("\nNew price: ");
             input = scanner.next().trim();
             try {
                 /* Converts the input to an integer. */
@@ -399,14 +413,14 @@ public class UserInterface {
      */
     private static void increase() {
 
-        /* Asks the user for how much to increase by. */
-        System.out.print("\nHow much to increase by: ");
         boolean valid = false;
         String input = "";
         int number = 0;
 
         /* Awaits a valid user input. */
         while (!valid) {
+            /* Asks the user for how much to increase by. */
+            System.out.print("\nHow much to increase by: ");
             input = scanner.next().trim(); 
             try {
                 /* Tries to parse input to integer. */
@@ -432,8 +446,6 @@ public class UserInterface {
      */
     private static void decrease() {
 
-         /* Asks the user for how much to increase by. */
-        System.out.print("\nHow much to decrease by: ");
         boolean valid = false;
         String input = "";
         int number = 0;
@@ -441,6 +453,9 @@ public class UserInterface {
 
         /* Awaits a valid user input. */
         while (!valid) {
+
+            /* Asks the user for how much to increase by. */
+            System.out.print("\nHow much to decrease by: ");
             input = scanner.next().trim();
 
             try {
@@ -485,18 +500,20 @@ public class UserInterface {
         /* Retrieves all items in the register along with an iterator. */
         LinkedHashSet<Item> items = warehouse.getItems();
         Iterator<Item> iterator = getIterator(items);
-        
+
+        System.out.println("\n\n              ITEMS IN WAREHOUSE:");
+        System.out.println("--------------------------------------------------");
         /* Iterates over all items in the LinkedHashSet. */
         while (iterator.hasNext()) {
             String[] fields = iterator.next().getAllFields();
 
             /* Prints all field values for each Item. */
-            for (String field : fields) {
-                System.out.println(field);
+            for (int i = 0; i < fields.length-1; i++) {
+                System.out.println(fieldNames[i] + fields[i]);
             }
-            System.out.println("\n");
+            System.out.println("--------------------------------------------------");
         }
-        
+        System.out.println("\n\n");
     }
 
 
@@ -524,26 +541,28 @@ public class UserInterface {
          * Awaits valid inputs for each parameter.
          */
         while (!valid) {
-            System.out.print("\nItem number: ");
+            System.out.print("\n(String) Item number: ");
             number = scanner.next().trim();
-            System.out.print("\nItem brand: ");
+            System.out.print("(String) Item brand: ");
             brand = scanner.next().trim();
-            System.out.print("\nItem color: ");
+            System.out.print("(String) Item color: ");
             color = scanner.next().trim();
-            System.out.print("\nShort description: ");
-            description = scanner.next().trim();
-            System.out.print("\nWeight in kilograms (double): ");
+            System.out.print("(String) Short description: ");
+            scanner.nextLine();
+            description = scanner.nextLine().trim();
+            System.out.print("(double >= 0) Weight in kilograms: ");
             String sweight = scanner.next().trim();
-            System.out.print("\nLength in meters (double): ");
+            System.out.print("(double >= 0) Length in meters: ");
             String slength = scanner.next().trim();
-            System.out.print("\nHeight in meters (double): ");
+            System.out.print("(double >= 0) Height in meters: ");
             String sheight = scanner.next().trim();
-            System.out.print("\nPrice in NOK (int): ");
+            System.out.print("(int >= 0) Price in NOK: ");
             String sprice = scanner.next().trim();
-            System.out.print("\nAmount of items: ");
+            System.out.print("(int >= 0) Amount of items: ");
             String samount = scanner.next().trim();
-            System.out.print("\nItem category: ");
+            System.out.print("(1 <= int <= 4) Item category (1= floor laminate, 2= window, 3= door, 4= lumber): ");
             String scategory = scanner.next().trim();
+            System.out.print("\n");
 
 
             /*
@@ -558,10 +577,27 @@ public class UserInterface {
                 amount = Integer.parseInt(samount);
                 category = Integer.parseInt(scategory);
 
-                valid = true;
+                if (!number.equals(description) && !number.isBlank() 
+                    && !description.isBlank() && !brand.isBlank() && !color.isBlank()
+                ) {
+                    if (weight >= 0 && length >= 0 && height >= 0 && price >= 0 && amount >= 0) {
+                        if (category >=1 && category <= 4) {
+                            valid = true;
+                        } else {
+                            System.out.println("Invalid input for category: " + category);
+                        }
+                    } else {
+                        System.out.println("Nummerical inputs cannot be negative, please try again.");
+                    }
+                } else {
+                    System.out.println("Sorry, no input fields can be empty, and itemNumber and description cannot be the same. ");
+                    System.out.println("Please try again.");
+                }
+
+                
             } catch (Exception e) {
-                System.out.print("There was something wrong with the inputs ");
-                System.out.println("please try again.");
+                System.out.print("Some of the inputs are not of expected type. ");
+                System.out.println("Please try again.");
             }
         }
 
@@ -589,7 +625,8 @@ public class UserInterface {
      * Exits the application and terminates the program.
      */
     private static void exit() {
-        System.out.println("\n Thank you for using Warehouse Management System");
+        System.out.println("\n\n--------------------------------------------------");
+        System.out.println(" Thank you for using Warehouse Management System");
         System.exit(0);
     }
 
@@ -598,8 +635,8 @@ public class UserInterface {
      * Prints the welcome message to the user upon starting this application.
      */
     private static void printWelcome() { 
-        System.out.println("\nWelcome to the Warehouse"                         );
-        System.out.println("----------------------------\n\n"                   );
+        System.out.println("\n       Welcome to the Warehouse Management System"                         );
+        System.out.println("--------------------------------------------------------\n\n"                   );
         System.out.println("Lets start with adding an item to your inventory:\n");
     }
 
@@ -613,7 +650,7 @@ public class UserInterface {
         System.out.println("   2. Fill inventory with default items.");
         System.out.println("   0. Exit.\n"                           );
 
-        System.out.println("Enter the number of desired operation."  );
+        System.out.print("Enter the number of desired operation: "  );
     }
 
     /**
@@ -762,7 +799,23 @@ public class UserInterface {
             200.0, 5.08, 80,
             100, 4
         );
-        currentItem = warehouse.fillInventory(item1, item2, item3, item4);
-        nextMenu = 1;
+        warehouse.fillInventory(item1, item2, item3, item4);
+
+        System.out.println("\n\nA total of 4 default items has been added:");
+        System.out.println("-----------------------------------------------");
+        System.out.println("Item number:   |  " + item1.getItemNumber());
+        System.out.println("Description:   |  " + item1.getItemDescription());
+        System.out.println("-----------------------------------------------");
+        System.out.println("Item number:   |  " + item2.getItemNumber());
+        System.out.println("Description:   |  " + item2.getItemDescription());
+        System.out.println("-----------------------------------------------");
+        System.out.println("Item number:   |  " + item3.getItemNumber());
+        System.out.println("Description:   |  " + item3.getItemDescription());
+        System.out.println("-----------------------------------------------");
+        System.out.println("Item number:   |  " + item4.getItemNumber());
+        System.out.println("Description:   |  " + item4.getItemDescription());
+        System.out.println("-----------------------------------------------\n\n");
+
+        nextMenu = 2;
     }
 }

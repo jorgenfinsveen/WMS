@@ -74,14 +74,14 @@ public class Warehouse {
      *      succesfull or not.
      */
     public boolean addItem(Item newItem) {
-        String number = newItem.getItemNumber();
-        String description = newItem.getItemDescription();
+        String number = newItem.getItemNumber().toLowerCase();
+        String description = newItem.getItemDescription().toLowerCase();
 
         boolean success = false;
 
         if (!items.containsKey(number) && !items.containsKey(description)) {
-            items.put(newItem.getItemNumber(), newItem);
-            items.put(newItem.getItemDescription(), newItem);
+            items.put(number, newItem);
+            items.put(description, newItem);
             success = true;
         } 
         return success;
@@ -104,7 +104,7 @@ public class Warehouse {
      *      ItemDescription.
      */
     public Item search(String searchWord) { 
-        return items.get(searchWord);
+        return items.get(searchWord.toLowerCase());
     }
 
 
@@ -137,8 +137,8 @@ public class Warehouse {
      *      ItemDescription, and vice versa.
      */
     public Item search(String searchWord1, String searchWord2) {
-        Item item1 = items.get(searchWord1);
-        Item item2 = items.get(searchWord2);
+        Item item1 = items.get(searchWord1.toLowerCase());
+        Item item2 = items.get(searchWord2.toLowerCase());
         Item found;
 
         if (item1 == null || item2 == null) {
@@ -161,8 +161,8 @@ public class Warehouse {
      */
     public void deleteCurrentItem(Item item) {
         if (item != null) {
-            items.remove(item.getItemNumber());
-            items.remove(item.getItemDescription());
+            items.remove(item.getItemNumber().toLowerCase());
+            items.remove(item.getItemDescription().toLowerCase());
         }
     }
 
@@ -217,7 +217,7 @@ public class Warehouse {
     public void alterCurrentItemDescription(Item item, String description) {
         if (item != null) {
             String previousDescription = item.getItemDescription();
-            item.setItemDescription(description);
+            item.setItemDescription(description.toLowerCase());
             this.items.remove(previousDescription);
             this.items.put(description, item);
         }
@@ -251,13 +251,10 @@ public class Warehouse {
      * 
      * <p>The last of the Items created will be set as the current Item.
      */
-    public Item fillInventory(Item item1, Item item2, Item item3, Item item4) {
-
+    public void fillInventory(Item item1, Item item2, Item item3, Item item4) {
         addItem(item1);
         addItem(item2);
         addItem(item3);
         addItem(item4);
-
-        return items.get("To-tom-fir-tom");
     }
 }

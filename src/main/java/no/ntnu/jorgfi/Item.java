@@ -238,7 +238,7 @@ public class Item
             this.getItemWeight() + "", this.getItemLength() + "",
             this.getItemHeight() + "", this.getItemPrice() + "",
             this.getItemAmount() + "", 
-            this.getItemCategoryAsInt() + ""
+            this.getItemCategoryAsString()
         };
     }
 
