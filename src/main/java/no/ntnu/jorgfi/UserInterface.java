@@ -330,7 +330,10 @@ public class UserInterface {
 
         if (delete) {   /* Deletion is chosen, item is deleted and user is redirected to home menu. */
             System.out.println("Item has been removed.");
-            warehouse.deleteCurrentItem(currentItem);
+            warehouse.deleteCurrentItem(
+                currentItem, currentItem.getItemNumber(),
+                currentItem.getItemDescription()
+            );
             currentItem = null;
             nextMenu = 2;
         } else {        /* Delettion is aborted, and user is redirected to item menu. */
@@ -372,7 +375,7 @@ public class UserInterface {
         int remainder = 100 - number;
         int discount = (currentprice * remainder)/100;
         /* Sets the price to be the current price - the given percentage.*/
-        warehouse.alterCurrentItemPrice(currentItem, discount);
+        currentItem.setItemPrice(discount);
         System.out.println("\nDesired discount of " + number + "% sets price to " + discount + ".");
     }
 
@@ -403,7 +406,7 @@ public class UserInterface {
             }
         }
         /* Changes the item price. */
-        warehouse.alterCurrentItemPrice(currentItem, number);
+        currentItem.setItemPrice(number);
         System.out.println("\nPrice set to " + number + ".");
     }
 
@@ -436,7 +439,7 @@ public class UserInterface {
         }
         /* Increases the item amount. */
         int newAmount = currentItem.getItemAmount() + number;
-        warehouse.alterCurrentItemAmount(currentItem, newAmount);
+        currentItem.setItemAmount(newAmount);
         System.out.println("\nItem amount increased by " + number + ".");
     }
 
@@ -474,7 +477,7 @@ public class UserInterface {
 
         /* Decreases the amount of the item. */
         int newAmount = currentAmount - number;
-        warehouse.alterCurrentItemAmount(currentItem, newAmount);
+        currentItem.setItemAmount(newAmount);
         System.out.println("\nItem amount decreased by " + number + ".");
     }
 
@@ -608,7 +611,7 @@ public class UserInterface {
                     description, weight, 
                     length, height, price, 
                     amount, category
-                )
+                ), number, description
             );
 
         if (success) { /* Item was unique and is now added. */
@@ -799,7 +802,11 @@ public class UserInterface {
             200.0, 5.08, 80,
             100, 4
         );
-        warehouse.fillInventory(item1, item2, item3, item4);
+
+        warehouse.addItem(item1, item1.getItemNumber(), item1.getItemDescription());
+        warehouse.addItem(item2, item2.getItemNumber(), item2.getItemDescription());
+        warehouse.addItem(item3, item3.getItemNumber(), item3.getItemDescription());
+        warehouse.addItem(item4, item4.getItemNumber(), item4.getItemDescription());
 
         System.out.println("\n\nA total of 4 default items has been added:");
         System.out.println("-----------------------------------------------");
