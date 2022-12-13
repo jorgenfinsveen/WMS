@@ -6,7 +6,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import org.junit.jupiter.api.Test;
 
 /**
- * JUnit-test class for testing of the Warehoude class.
+ * JUnit-test class for testing of the Warehouse-class.
  *
  * @since       2022-12-02
  * @version     2022-12-02
@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test;
  */
 public class WarehouseTest {
   /**
-   * Create an empty instance of the Warehouse class.
+   * Create an empty instance of the Warehouse-class.
    *
    * @return new Warehouse-object.
    */
@@ -76,6 +76,7 @@ public class WarehouseTest {
     assertEquals(1, warehouse.getItems().size());
   }
 
+
   /**
    * Deleting existing Item is possible.
    */
@@ -90,6 +91,7 @@ public class WarehouseTest {
     warehouse.deleteCurrentItem(item, item.getItemNumber(), item.getItemDescription());
     assertEquals(0, warehouse.getItems().size());
   }
+
 
   /**
    * Deleting non-existing item should not alter the registry.
@@ -106,6 +108,7 @@ public class WarehouseTest {
     assertEquals(1, warehouse.getItems().size());
   }
 
+
   /**
    * Searching for existing item should be possible.
    */
@@ -120,6 +123,7 @@ public class WarehouseTest {
     assertEquals(item, warehouse.search(item.getItemDescription()));
   }
 
+  
   /**
    * Searching for non-existent item should return null.
    */

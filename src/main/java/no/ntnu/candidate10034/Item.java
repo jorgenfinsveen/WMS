@@ -4,7 +4,8 @@ package no.ntnu.candidate10034;
  * Represents an item in a warehouse, containing
  * general product information, pricing and the
  * amount stored units.
- * Considered an entity-class, with the purpose 
+ *
+ * </p>Considered an entity-class, with the purpose 
  * of storing entity-data. Methods available are 
  * therefore mainly acessors and mutators. 
  *
@@ -271,7 +272,8 @@ public class Item {
 
   /**
    * Update the items description.
-   * Must be a short String no longer
+   *
+   * </p>Must be a short String no longer
    * than 100 characters.
    *
    * @param itemDescription new description
@@ -285,7 +287,8 @@ public class Item {
   /**
    * Set the weight of the item as a double
    * value measured in kilograms.
-   * The weight cannot be less than 0.
+   *
+   * </p>The weight cannot be less than 0.
    *
    * @param itemWeight new weight.
    */
@@ -298,7 +301,8 @@ public class Item {
   /**
    * Assign the item-length as a double
    * value measured in meters.
-   * The length cannot be less than 0.
+   *
+   * </p>The length cannot be less than 0.
    *
    * @param itemLength new length.
    */
@@ -311,7 +315,8 @@ public class Item {
   /**
    * Assign the item-height as a double
    * value measured in meters.
-   * The height cannot be less than 0.
+   *
+   * </p>The height cannot be less than 0.
    *
    * @param itemHeight new height.
    */
@@ -323,7 +328,8 @@ public class Item {
 
   /**
    * Update the item pricing as an integer.
-   * The price cannot be less than 0.
+   *
+   * </p>The price cannot be less than 0.
    *
    * @param itemPrice new price.
    */
@@ -335,7 +341,8 @@ public class Item {
 
   /**
    * Update the amount of items in store.
-   * The amount cannot be less than 0.
+   * 
+   * </p>The amount cannot be less than 0.
    *
    * @param itemAmount new amount.
    */
@@ -347,7 +354,8 @@ public class Item {
   /**
    * Set item category represented by an
    * integer.
-   * The category item must be in the 
+   * 
+   * </p>The category item must be in the 
    * range of [1, 4].
    *
    * @param itemCategory new item category.

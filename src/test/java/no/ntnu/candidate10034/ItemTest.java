@@ -45,7 +45,6 @@ public class ItemTest {
   }
 
 
-
   /**
    * Assert valid creation of a new Item is possible.
    */
@@ -86,8 +85,9 @@ public class ItemTest {
     assertEquals("floor laminate", item.getItemCategoryAsString());
   }
 
+
   /**
-   * Confirm all seter-methods work as expected for valid parameters.
+   * Confirm all setter-methods work as expected for valid parameters.
    */
   @Test
   public void testAllMutatorsPositive() {
@@ -118,9 +118,8 @@ public class ItemTest {
   }
 
 
-
   /**
-   * Confirm all seter-methods is not allowed for invalid parameters.
+   * Confirm all setter-methods is not allowed for invalid parameters.
    */
   @Test
   public void testAllMutatorsNegative() {

@@ -119,6 +119,12 @@ public class UserInterface {
    */
   public static void launch() {
 
+    /*
+     * Runs until the application is terminated by the user.
+     * The menu which are to be displayed will be determined by
+     * the nextMenu variable, where 0, 1 and 2 represents the
+     * different menus.
+    */
     while (true) {
       if (nextMenu == 0) {
         initMenu();
@@ -141,6 +147,7 @@ public class UserInterface {
     /* Prints the welcoming message to STDOUT. */
     printWelcome();
 
+    /* Indicates wether the user has entered a valid option. */
     boolean selected = false;
     String input = "";
 
@@ -152,6 +159,7 @@ public class UserInterface {
     while (!selected) {
       printInitialOptions();
 
+      /* Trims input to remove possible whitespaces before and after input. */
       input = scanner.next().trim();
 
       switch (input) {
@@ -249,6 +257,7 @@ public class UserInterface {
     /* Displays the available options for the home menu and asks for input. */
     printHomeMenuOptions();
 
+    /* Trims input to remove possible whitespaces before and after input. */
     Boolean selected = false;
     String input = "";
 
@@ -389,8 +398,8 @@ public class UserInterface {
       String[] fields = iterator.next().getAllFields();
 
       /* Prints all field values for each Item. */
-      for (int i = 0; i < fields.length - 1; i++) {
-        System.out.println(FIELD_NAMES[i] + fields[i]);
+      for (int index = 0; index < fields.length - 1; index++) {
+        System.out.println(FIELD_NAMES[index] + fields[index]);
       }
       System.out.println("--------------------------------------------------");
     }
@@ -479,8 +488,10 @@ public class UserInterface {
     }
     int currentprice = currentItem.getItemPrice();
 
+    /* Calculates the remaining price when applying the discount. */
     int remainder = 100 - number;
     int discount = (currentprice * remainder) / 100;
+
     /* Sets the price to be the current price - the given percentage.*/
     currentItem.setItemPrice(discount);
     System.out.println("\nDesired discount of " + number + "% sets price to " + discount + ".");
@@ -603,6 +614,10 @@ public class UserInterface {
   private static void addItem() {
     boolean valid = false;
 
+    /* 
+     * Defines each value which are to be used as parameters for creating 
+     * an instance of the Item-class.
+    */
     String number = "";
     String brand = "";
     String color = "";
@@ -615,7 +630,7 @@ public class UserInterface {
     int category = 0;
 
     /*
-    * Awaits valid inputs for each parameter.
+     * Awaits valid inputs for each parameter.
     */
     while (!valid) {
       System.out.print("\n(String) Item number: ");
@@ -628,32 +643,39 @@ public class UserInterface {
       scanner.nextLine();
       description = scanner.nextLine().trim();
       System.out.print("(double >= 0) Weight in kilograms: ");
-      String sweight = scanner.next().trim();
+
+      /* 
+       * Rather than using scanner.nextDouble() or scanner.nextInt(), 
+       * the scanner will treat nummerical values as strings.
+       * The reason for this is because it is easier to implement
+       * graceful termination for wrong user inputs this way.
+      */
+      String stringWeight = scanner.next().trim();
       System.out.print("(double >= 0) Length in meters: ");
-      String slength = scanner.next().trim();
+      String stringLength = scanner.next().trim();
       System.out.print("(double >= 0) Height in meters: ");
-      String sheight = scanner.next().trim();
+      String stringHeight = scanner.next().trim();
       System.out.print("(int >= 0) Price in NOK: ");
-      String sprice = scanner.next().trim();
+      String stringPrice = scanner.next().trim();
       System.out.print("(int >= 0) Amount of items: ");
-      String samount = scanner.next().trim();
+      String stringAmount = scanner.next().trim();
       System.out.print("(1 <= int <= 4) Item category ");
       System.out.print("(1= floor laminate, 2= window, 3= door, 4= lumber): ");
-      String scategory = scanner.next().trim();
+      String stringCategory = scanner.next().trim();
       System.out.print("\n");
 
 
       /*
-      * Ensures that all parameters are of valid data types.
+       * Ensures that all parameters are of valid data types.
       */
       try {
-        weight = Double.parseDouble(sweight);
-        length = Double.parseDouble(slength);
-        height = Double.parseDouble(sheight);
+        weight = Double.parseDouble(stringWeight);
+        length = Double.parseDouble(stringLength);
+        height = Double.parseDouble(stringHeight);
 
-        price = Integer.parseInt(sprice);
-        amount = Integer.parseInt(samount);
-        category = Integer.parseInt(scategory);
+        price = Integer.parseInt(stringPrice);
+        amount = Integer.parseInt(stringAmount);
+        category = Integer.parseInt(stringCategory);
 
         if (!number.equals(description) && !number.isBlank()
             && !description.isBlank() && !brand.isBlank() && !color.isBlank()
